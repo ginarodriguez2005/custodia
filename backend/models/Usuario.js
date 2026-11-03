@@ -15,6 +15,11 @@ const usuarioSchema = new mongoose.Schema({
         trim: true
     },
 
+    fotoPerfil: {
+        type: String,
+        default: null
+    },
+
     localidad: {
         type: String,
         required: true,
