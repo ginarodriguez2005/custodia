@@ -1,0 +1,53 @@
+/* Design tokens de Custodia: colores, tipografía, espaciados y radios. */
+:root {
+    /* Colores de marca */
+    --color-primary: #0F3D5E;          /* azul marino: header, títulos, bordes */
+    --color-primary-light: #1C5480;
+    --color-success: #2E7D3A;          /* verde: acción principal */
+    --color-success-dark: #256830;
+    --color-accent: #2A56D6;           /* azul vivo: enviar / confirmar */
+    --color-accent-dark: #1F44B3;
+    --color-selected-bg: #E8EEF3;      /* fondo de opción seleccionada */
+    --color-success-bg: #E8F4EA;
+
+    /* Neutros */
+    --color-bg: #F3F6F9;
+    --color-surface: #FFFFFF;
+    --color-text: #1A2B3A;
+    --color-text-muted: #5B6B7A;
+    --color-placeholder: #8A97A3;
+    --color-border: #B8C4CF;
+    --color-error: #C62828;
+    --color-error-bg: #FDECEC;
+
+    /* Tipografía */
+    --font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.5rem;
+
+    /* Espaciado */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 20px;
+    --space-6: 24px;
+    --space-8: 32px;
+
+    /* Radios y alturas */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --control-height: 48px;
+    --header-height: 52px;
+
+    /* Margen lateral del contenido: crece con el ancho de la pantalla */
+    --page-gutter: clamp(16px, 5vw, 80px);
+
+    /* Breakpoints de referencia (en media queries se escriben literales):
+       tablet/escritorio >= 768px, escritorio ancho >= 1200px */
+
+    --focus-ring: 0 0 0 3px rgba(15, 61, 94, 0.25);
+}

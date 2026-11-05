@@ -1,0 +1,162 @@
+/* Reset, tipografía base y layout general de pantalla. */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    color: var(--color-text);
+    background: var(--color-bg);
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+a {
+    color: var(--color-primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* Pantalla a todo el ancho: header arriba, contenido que crece */
+.screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background: var(--color-bg);
+}
+
+.screen__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: var(--space-5) var(--page-gutter) var(--space-6);
+}
+
+/* Acciones: en celular apiladas y empujadas al fondo de la pantalla */
+.screen__actions {
+    margin-top: auto;
+    padding-top: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+/* Tablet / escritorio: acciones en fila, debajo del formulario */
+@media (min-width: 768px) {
+    .screen__content {
+        padding-top: var(--space-8);
+        padding-bottom: var(--space-8);
+    }
+
+    .screen__actions {
+        margin-top: var(--space-2);
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: var(--space-4);
+    }
+
+    .screen__actions > .notice {
+        grid-column: 1 / -1;
+    }
+}
+
+.page-title {
+    margin: 0;
+    font-size: var(--font-size-xl);
+    font-weight: 800;
+    color: var(--color-primary);
+    line-height: 1.2;
+}
+
+.page-subtitle {
+    margin: var(--space-1) 0 var(--space-5);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+@media (min-width: 768px) {
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .page-subtitle {
+        font-size: var(--font-size-md);
+        margin-bottom: var(--space-8);
+    }
+}
+
+.text-small {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+/* Nota informativa con ícono (ej: "Nunca te pediremos...") */
+.notice {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-primary);
+    line-height: 1.3;
+}
+
+.notice__icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* Mensaje de error/estado general del formulario */
+.alert {
+    display: none;
+    margin-bottom: var(--space-4);
+    padding: var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-sm);
+}
+
+.alert.is-visible {
+    display: block;
+}
+
+.alert--error {
+    background: var(--color-error-bg);
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+}
+
+.alert--success {
+    background: var(--color-success-bg);
+    color: var(--color-success-dark);
+    border: 1px solid var(--color-success);
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}

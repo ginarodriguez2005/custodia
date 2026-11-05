@@ -1,6 +1,7 @@
 
 require("dotenv").config();
 
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const conectarBD = require("./config/database");
@@ -20,6 +21,16 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/solicitudes/:id/reclamos", reclamoRoutes);
+
+// Rutas de API inexistentes: responder JSON en lugar de buscar un archivo estático.
+app.use("/api", (req, res) => {
+    res.status(404).json({
+        mensaje: "Ruta no encontrada"
+    });
+});
+
+// Frontend: se sirve como archivos estáticos desde el mismo servidor y puerto.
+app.use(express.static(path.join(__dirname, "..", "frontend")));
 
 const PORT = process.env.PORT || 3000;
 

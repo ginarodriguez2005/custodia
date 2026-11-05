@@ -1,0 +1,6 @@
+/* Punto de entrada: cada pantalla incluye solo este archivo. */
+@import url("variables.css");
+@import url("base.css");
+@import url("header.css");
+@import url("buttons.css");
+@import url("forms.css");
