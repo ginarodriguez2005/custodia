@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear cuenta | Custodia</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <a class="app-header__brand" href="login.html">
+                <img class="app-header__logo" src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                Custodia
+            </a>
+            <span class="app-header__link">Crear cuenta</span>
+        </header>
+
+        <main class="screen__content">
+            <h1 class="page-title">Cuenta de comprador</h1>
+            <p class="page-subtitle">Solo 5 datos, rápido y simple.</p>
+
+            <div class="alert alert--error" id="form-alert" role="alert"></div>
+
+            <form class="form" id="registro-form" novalidate>
+                <div class="form__grid">
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="nombre">Nombre y apellido</label>
+                        <span class="field__tag">Obligatorio</span>
+                    </div>
+                    <input class="input" type="text" id="nombre" name="nombre"
+                           placeholder="Ej: Susana Pérez" autocomplete="name" required>
+                    <p class="field__error">Ingresá tu nombre y apellido.</p>
+                </div>
+
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="celular">Celular (WhatsApp)</label>
+                        <span class="field__tag">Obligatorio</span>
+                    </div>
+                    <input class="input" type="tel" id="celular" name="celular"
+                           placeholder="Ej: 099 123 456" autocomplete="tel" inputmode="tel" required>
+                    <p class="field__error">Ingresá tu número de celular.</p>
+                </div>
+
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="localidad">Localidad / Barrio</label>
+                        <span class="field__tag">Obligatorio</span>
+                    </div>
+                    <input class="input" type="text" id="localidad" name="localidad"
+                           placeholder="Ej: Pocitos, Montevideo" autocomplete="address-level2" required>
+                    <p class="field__error">Ingresá tu localidad o barrio.</p>
+                </div>
+
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="contrasena">Contraseña</label>
+                        <span class="field__tag">Obligatorio</span>
+                    </div>
+                    <div class="input-group">
+                        <input class="input" type="password" id="contrasena" name="contrasena"
+                               placeholder="Elegí una sencilla" autocomplete="new-password" required>
+                        <button class="btn-text input-group__action" type="button"
+                                data-toggle-password="contrasena">Mostrar</button>
+                    </div>
+                    <p class="field__error">Elegí una contraseña.</p>
+                </div>
+
+                <div class="field field--full">
+                    <div class="field__header">
+                        <span class="field__label">Foto de perfil</span>
+                        <span class="field__tag">Opcional</span>
+                    </div>
+                    <div class="photo-picker" id="photo-picker">
+                        <label class="photo-picker__avatar" for="foto" id="photo-preview">
+                            <img class="photo-picker__icon" src="../Public/Iconos/photo_camera_30dp_0F3D5E_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                            <span class="visually-hidden">Elegir foto de perfil</span>
+                        </label>
+                        <label class="btn btn--outline" for="foto" id="photo-btn">Subir foto</label>
+                        <input class="visually-hidden" type="file" id="foto" accept="image/*">
+                    </div>
+                </div>
+                </div>
+
+                <div class="screen__actions">
+                    <button class="btn btn--primary btn--block" type="submit">Crear mi cuenta</button>
+                    <p class="notice">
+                        <img class="notice__icon" src="../Public/Iconos/verified_user_30dp_0F3D5E_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                        Tus datos se usan solo para avisarte de tu compra
+                    </p>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/registro.js"></script>
+</body>
+</html>

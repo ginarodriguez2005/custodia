@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custodia</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <script>
+        // Sin sesión: ir al login.
+        if (!localStorage.getItem("token")) {
+            window.location.replace("pages/login.html");
+        }
+    </script>
+</head>
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <a class="app-header__brand" href="index.html">
+                <img class="app-header__logo" src="Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                Custodia
+            </a>
+            <a class="app-header__link" href="#" id="salir">Salir</a>
+        </header>
+        <main class="screen__content">
+            <!-- Pantalla principal pendiente -->
+            <h1 class="page-title" id="saludo">Hola</h1>
+            <p class="page-subtitle">Ya ingresaste a tu cuenta.</p>
+        </main>
+    </div>
+    <script>
+        try {
+            const usuario = JSON.parse(localStorage.getItem("usuario"));
+            if (usuario?.nombre) document.getElementById("saludo").textContent = `Hola, ${usuario.nombre}`;
+        } catch {}
+        document.getElementById("salir").addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("token");
+            localStorage.removeItem("usuario");
+            window.location.href = "pages/login.html";
+        });
+    </script>
+</body>
+</html>
