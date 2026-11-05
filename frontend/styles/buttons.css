@@ -1,0 +1,91 @@
+/* Botones reutilizables. Uso: <button class="btn btn--primary btn--block"> */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    min-height: var(--control-height);
+    padding: 0 var(--space-5);
+    border: 2px solid transparent;
+    border-radius: var(--radius-sm);
+    font-family: inherit;
+    font-size: var(--font-size-md);
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.15s, border-color 0.15s, opacity 0.15s;
+}
+
+.btn:hover {
+    text-decoration: none;
+}
+
+.btn:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn--block {
+    width: 100%;
+}
+
+/* Acción principal (verde) */
+.btn--primary {
+    background: var(--color-success);
+    color: #FFFFFF;
+}
+
+.btn--primary:hover:not(:disabled) {
+    background: var(--color-success-dark);
+}
+
+/* Acción de envío (azul vivo) */
+.btn--accent {
+    background: var(--color-accent);
+    color: #FFFFFF;
+}
+
+.btn--accent:hover:not(:disabled) {
+    background: var(--color-accent-dark);
+}
+
+/* Ícono dentro de un botón */
+.btn__icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
+/* Acción secundaria (contorno azul) */
+.btn--outline {
+    background: var(--color-surface);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.btn--outline:hover:not(:disabled) {
+    background: #E8EEF3;
+}
+
+/* Botón de texto (ej: "Mostrar" dentro de un input) */
+.btn-text {
+    padding: var(--space-2);
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: var(--font-size-sm);
+    font-weight: 700;
+    color: var(--color-primary);
+    cursor: pointer;
+}
+
+.btn-text:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+    border-radius: var(--radius-sm);
+}

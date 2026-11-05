@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingresar | Custodia</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <a class="app-header__brand" href="login.html">
+                <img class="app-header__logo" src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                Custodia
+            </a>
+            <a class="app-header__link" href="#">Ayuda</a>
+        </header>
+
+        <main class="screen__content">
+            <h1 class="page-title">Ingresá a tu cuenta</h1>
+            <p class="page-subtitle">Con tu número de celular alcanza.</p>
+
+            <div class="alert alert--error" id="form-alert" role="alert"></div>
+
+            <form class="form" id="login-form" novalidate>
+                <div class="form__grid">
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="celular">Número de celular</label>
+                    </div>
+                    <input class="input" type="tel" id="celular" name="celular"
+                           placeholder="099 123 456" autocomplete="tel" inputmode="tel" required>
+                    <p class="field__error">Ingresá tu número de celular.</p>
+                </div>
+
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="contrasena">Contraseña</label>
+                    </div>
+                    <div class="input-group">
+                        <input class="input" type="password" id="contrasena" name="contrasena"
+                               placeholder="••••••••" autocomplete="current-password" required>
+                        <button class="btn-text input-group__action" type="button"
+                                data-toggle-password="contrasena">Mostrar</button>
+                    </div>
+                    <p class="field__error">Ingresá tu contraseña.</p>
+                    <p class="field__hint">¿Primera vez? <a href="registro.html">Creá tu cuenta</a></p>
+                </div>
+                </div>
+
+                <div class="screen__actions">
+                    <button class="btn btn--primary btn--block" type="submit">Ingresar</button>
+                    <button class="btn btn--outline btn--block" type="button" id="olvide-btn">Olvidé mi contraseña</button>
+                    <p class="notice">
+                        <img class="notice__icon" src="../Public/Iconos/verified_user_30dp_0F3D5E_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                        Nunca te pediremos tu contraseña por teléfono ni mensaje
+                    </p>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/login.js"></script>
+</body>
+</html>
