@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crear solicitud | Custodia</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <div class="app-header__left">
+                <a class="app-header__back" href="../index.html" aria-label="Volver a inicio">← Volver</a>
+                <a class="app-header__brand" href="../index.html">
+                    <img class="app-header__logo"
+                        src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                    Custodia
+                </a>
+            </div>
+            <a class="app-header__link" id="salir" href="login.html">Salir</a>
+        </header>
+        <main class="screen__content">
+            <div class="page-shell">
+                <div class="page-intro">
+                    <h1 class="page-title">Creá tu solicitud de pago</h1>
+                    <p class="page-subtitle">Agregá los datos del producto y compartí el enlace con tu comprador.</p>
+                </div>
+                <div id="form-alert" class="alert alert--error" role="alert"></div>
+                <form id="solicitud-form" class="form" novalidate>
+                    <div class="panel">
+                        <div class="field" id="campo-nombre">
+                            <div class="field__header">
+                                <label class="field__label" for="nombreProducto">¿Qué estás vendiendo?</label>
+                                <span class="field__tag">Obligatorio</span>
+                            </div>
+                            <input class="input" id="nombreProducto" name="nombreProducto" maxlength="120"
+                                placeholder="Ej: Bicicleta rodado 26" aria-describedby="error-nombre" required>
+                            <p class="field__error" id="error-nombre">Ingresá el nombre del producto.</p>
+                        </div>
+                        <div class="field" id="campo-precio">
+                            <div class="field__header">
+                                <label class="field__label" for="precio">Precio (UYU)</label>
+                                <span class="field__tag">Obligatorio</span>
+                            </div>
+                            <input class="input" id="precio" name="precio" type="number" step="0.01" min="0.01"
+                                placeholder="Ej: 12000" aria-describedby="error-precio" required>
+                            <p class="field__error" id="error-precio">Ingresá un precio mayor a cero.</p>
+                        </div>
+                        <div class="field" id="campo-foto">
+                            <div class="field__header">
+                                <label class="field__label" for="foto">Fotografía del producto</label>
+                                <span class="field__tag">Obligatorio</span>
+                            </div>
+                            <label class="photo-upload" for="foto" id="foto-selector">
+                                <span class="photo-upload__symbol" aria-hidden="true">＋</span>
+                                <strong id="foto-texto">Elegir fotografía del producto</strong>
+                                <span>JPG, PNG o WebP · Hasta 2 MB</span>
+                            </label>
+                            <input class="visually-hidden" type="file" id="foto" name="foto"
+                                accept="image/jpeg,image/png,image/webp" aria-describedby="error-foto">
+                            <p class="field__error" id="error-foto">Seleccioná una fotografía del producto.</p>
+                            <div id="foto-preview-box" class="photo-upload__preview hide">
+                                <img id="vista-foto" class="product-preview"
+                                    alt="Vista previa de la fotografía seleccionada">
+                                <p id="foto-nombre" class="text-small"></p>
+                                <div class="actions-row">
+                                    <button id="cambiar-foto" type="button" class="btn btn--outline">Cambiar
+                                        foto</button>
+                                    <button id="quitar-foto" type="button" class="btn btn--outline">Quitar foto</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn--primary btn--block" id="crear-btn" type="submit">Crear solicitud y generar
+                        enlace</button>
+                </form>
+                <div id="resultado" class="panel hide" aria-live="polite">
+                    <h2 class="panel__title">¡Solicitud creada!</h2>
+                    <p>Compartí este enlace con tu comprador:</p>
+                    <p id="enlace-creado" class="break-anywhere"></p>
+                    <div class="actions-row">
+                        <button type="button" class="btn btn--outline" id="copiar-enlace">Copiar enlace</button>
+                        <a id="ver-solicitud" class="btn btn--primary">Ver solicitud</a>
+                    </div>
+                </div>
+                <p class="info-note">Este proyecto simula operaciones de pago. No se realizan transferencias bancarias
+                    reales.</p>
+            </div>
+        </main>
+    </div>
+    <script src="../js/api.js"></script>
+    <script src="../js/solicitudes-ui.js"></script>
+    <script src="../js/crear-solicitud.js"></script>
+</body>
+
+</html>
