@@ -6,7 +6,7 @@ const fs = require("node:fs/promises");
 // Crear una solicitud de pago
 const crearSolicitud = async (req, res) => {
     try {
-        const { nombreProducto, precio } = req.body;
+        const { nombreProducto, precio } = req.body || {};
 
         const precioNumero = Number(precio);
 
@@ -14,13 +14,13 @@ const crearSolicitud = async (req, res) => {
         if (
             typeof nombreProducto !== "string" ||
             !nombreProducto.trim() ||
-            !String(precio).trim() ||
+            (precio === undefined || precio === null || !String(precio).trim()) ||
             !Number.isFinite(precioNumero) ||
             precioNumero <= 0 ||
             !req.file
         ) {
             if (req.file) {
-                await fs.unlink(req.file.path).catch(() => {});
+                await fs.unlink(req.file.path).catch(() => { });
             }
 
             return res.status(400).json({
@@ -49,16 +49,22 @@ const crearSolicitud = async (req, res) => {
                 codigoReferencia: solicitud.codigoReferencia,
                 estado: solicitud.estado,
                 fechaCreacion: solicitud.fechaCreacion,
-                enlace: `/solicitud.html?id=${solicitud._id}`
+                enlace: `/pages/solicitud.html?id=${solicitud._id}`
             }
         });
 
     } catch (error) {
         if (req.file) {
-            await fs.unlink(req.file.path).catch(() => {});
+            await fs.unlink(req.file.path).catch(() => { });
         }
 
         console.error("Error al crear solicitud:", error);
+
+        if (error.code === 11000) {
+            return res.status(409).json({
+                mensaje: "Se generó un código de referencia duplicado. Intentá nuevamente"
+            });
+        }
 
         return res.status(500).json({
             mensaje: "Error al crear la solicitud"
@@ -111,8 +117,9 @@ const obtenerSolicitudPorId = async (req, res) => {
         }
 
         const solicitud = await SolicitudPago.findById(id)
-            .select("nombreProducto precio foto estado vendedor")
-            .populate("vendedor", "nombre localidad");
+            .select("nombreProducto precio foto estado vendedor comprador")
+            .populate("vendedor", "nombre localidad")
+            .populate("comprador", "nombre");
 
         if (!solicitud) {
             return res.status(404).json({
@@ -127,7 +134,10 @@ const obtenerSolicitudPorId = async (req, res) => {
                 precio: solicitud.precio,
                 foto: solicitud.foto,
                 estado: solicitud.estado,
-                vendedor: solicitud.vendedor
+                vendedor: solicitud.vendedor,
+                comprador: solicitud.comprador
+                    ? { nombre: solicitud.comprador.nombre }
+                    : null
             }
         });
 
@@ -205,6 +215,9 @@ const pagarSolicitud = async (req, res) => {
             });
         }
 
+        // Mostrar únicamente el nombre del comprador en la respuesta.
+        await solicitudActualizada.populate("comprador", "nombre");
+
         return res.status(200).json({
             mensaje: "Pago simulado correctamente",
             solicitud: {
@@ -214,7 +227,7 @@ const pagarSolicitud = async (req, res) => {
                 codigoReferencia:
                     solicitudActualizada.codigoReferencia,
                 estado: solicitudActualizada.estado,
-                comprador: solicitudActualizada.comprador,
+                comprador: { nombre: solicitudActualizada.comprador.nombre },
                 fechaPago: solicitudActualizada.fechaPago
             }
         });
