@@ -1,43 +1,58 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Custodia</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Custodia | Inicio</title>
     <link rel="stylesheet" href="styles/main.css">
     <script>
-        // Sin sesión: ir al login.
-        if (!localStorage.getItem("token")) {
-            window.location.replace("pages/login.html");
-        }
+        if (!localStorage.getItem("token")) window.location.replace("pages/login.html");
     </script>
 </head>
+
 <body>
     <div class="screen">
         <header class="app-header">
-            <a class="app-header__brand" href="index.html">
-                <img class="app-header__logo" src="Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
-                Custodia
-            </a>
-            <a class="app-header__link" href="#" id="salir">Salir</a>
+            <div class="app-header__left">
+                <a class="app-header__brand" href="index.html">
+                    <img class="app-header__logo"
+                        src="Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                    Custodia
+                </a>
+            </div>
+            <a class="app-header__link" href="pages/login.html" id="salir">Salir</a>
         </header>
         <main class="screen__content">
-            <!-- Pantalla principal pendiente -->
-            <h1 class="page-title" id="saludo">Hola</h1>
-            <p class="page-subtitle">Ya ingresaste a tu cuenta.</p>
+            <div class="page-shell">
+                <div class="page-intro">
+                    <h1 class="page-title" id="saludo">Hola</h1>
+                    <p class="page-subtitle">Elegí qué querés hacer hoy.</p>
+                </div>
+                <div class="panel">
+                    <h2 class="panel__title">Vender un producto</h2>
+                    <p>Creá una solicitud con la fotografía y el precio, y compartí el enlace con el comprador.</p>
+                    <a href="pages/crear-solicitud.html" class="btn btn--primary btn--block">Crear solicitud de pago</a>
+                </div>
+                <div class="panel">
+                    <h2 class="panel__title">Mis operaciones</h2>
+                    <p>Revisá las solicitudes que creaste y las compras que realizaste.</p>
+                    <a href="pages/mis-solicitudes.html" class="btn btn--outline btn--block">Ver mis compras y
+                        ventas</a>
+                </div>
+                <p class="info-note">Los pagos y las liberaciones de dinero son simulados como parte de este proyecto.
+                </p>
+            </div>
         </main>
     </div>
+    <script src="js/api.js"></script>
+    <script src="js/solicitudes-ui.js"></script>
     <script>
-        try {
-            const usuario = JSON.parse(localStorage.getItem("usuario"));
-            if (usuario?.nombre) document.getElementById("saludo").textContent = `Hola, ${usuario.nombre}`;
-        } catch {}
-        document.getElementById("salir").addEventListener("click", (e) => {
-            e.preventDefault();
-            localStorage.removeItem("token");
-            localStorage.removeItem("usuario");
-            window.location.href = "pages/login.html";
-        });
+        const usuario = obtenerUsuario();
+        if (usuario?.nombre) {
+            document.getElementById("saludo").textContent = `Hola, ${usuario.nombre}`;
+        }
     </script>
 </body>
+
 </html>

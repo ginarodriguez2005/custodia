@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle de solicitud | Custodia</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <div class="app-header__left">
+                <a class="app-header__back" href="mis-solicitudes.html" aria-label="Volver a mis solicitudes">←
+                    Volver</a>
+                <a class="app-header__brand" href="../index.html">
+                    <img class="app-header__logo"
+                        src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                    Custodia
+                </a>
+            </div>
+            <a class="app-header__link" id="salir" href="login.html">Salir</a>
+        </header>
+        <main class="screen__content">
+            <div class="page-shell">
+                <div class="page-intro">
+                    <h1 class="page-title">Detalles de la solicitud</h1>
+                    <p class="page-subtitle">Revisá la información de esta operación.</p>
+                </div>
+                <div id="form-alert" class="alert alert--error" role="alert"></div>
+                <p id="cargando" class="loading-note">Cargando solicitud...</p>
+                <section id="detalles" class="hide" aria-label="Datos de la solicitud">
+                    <div class="panel">
+                        <img class="product-image hide" id="producto-foto" alt="Fotografía del producto">
+                        <h2 id="producto-nombre" class="panel__title product-detail-title"></h2>
+                        <span id="producto-estado" class="status"></span>
+                        <p id="producto-estado-descripcion" class="status-description"></p>
+                        <p id="producto-precio" class="amount"></p>
+                        <div id="producto-datos"></div>
+                    </div>
+                    <p class="info-note">Custodia es un prototipo académico. El pago es simulado.</p>
+                    <div id="acciones" class="actions-row">
+                        <a id="ir-pagar" class="btn btn--primary hide">Simular pago</a>
+                        <button type="button" id="copiar" class="btn btn--outline">Copiar enlace</button>
+                        <a href="mis-solicitudes.html" class="btn btn--outline">Mis solicitudes</a>
+                    </div>
+                    <p id="aviso-vendedor" class="text-small hide">Esta solicitud pertenece a tu cuenta. No podés pagar
+                        tu propia venta.</p>
+                    <p id="aviso-estado" class="text-small hide"></p>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="../js/api.js"></script>
+    <script src="../js/solicitudes-ui.js"></script>
+    <script src="../js/solicitud.js"></script>
+</body>
+
+</html>

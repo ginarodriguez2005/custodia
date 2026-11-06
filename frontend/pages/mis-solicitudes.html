@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mis compras y ventas | Custodia</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <div class="app-header__left">
+                <a class="app-header__back" href="../index.html" aria-label="Volver a inicio">← Volver</a>
+                <a class="app-header__brand" href="../index.html">
+                    <img class="app-header__logo"
+                        src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                    Custodia
+                </a>
+            </div>
+            <a class="app-header__link" id="salir" href="login.html">Salir</a>
+        </header>
+        <main class="screen__content">
+            <div class="page-shell page-shell--wide">
+                <div class="page-intro">
+                    <h1 class="page-title">Mis compras y ventas</h1>
+                    <p class="page-subtitle">Consultá tus operaciones y el estado de cada solicitud.</p>
+                </div>
+                <div id="form-alert" class="alert alert--error" role="alert"></div>
+                <div class="tabs" role="tablist" aria-label="Mis operaciones">
+                    <button type="button" id="tab-ventas" role="tab" aria-selected="true"
+                        aria-controls="lista-operaciones">Mis ventas</button>
+                    <button type="button" id="tab-compras" role="tab" aria-selected="false"
+                        aria-controls="lista-operaciones">Mis compras</button>
+                </div>
+                <div id="lista-operaciones" role="tabpanel" class="card-list">
+                    <p class="loading-note">Cargando solicitudes...</p>
+                </div>
+                <nav id="paginacion" class="pagination hide" aria-label="Páginas de operaciones">
+                    <button type="button" id="pagina-anterior" class="btn btn--outline">Anterior</button>
+                    <span id="pagina-info" aria-live="polite">Página 1 de 1</span>
+                    <button type="button" id="pagina-siguiente" class="btn btn--outline">Siguiente</button>
+                </nav>
+                <div class="nav-links">
+                    <a class="btn btn--primary btn--block" href="crear-solicitud.html">Crear nueva solicitud de
+                        venta</a>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="../js/api.js"></script>
+    <script src="../js/solicitudes-ui.js"></script>
+    <script src="../js/mis-solicitudes.js"></script>
+</body>
+
+</html>

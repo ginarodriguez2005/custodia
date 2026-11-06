@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Simular pago | Custodia</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <div class="app-header__left">
+                <a class="app-header__back" href="solicitud.html" aria-label="Volver a detalle">← Volver</a>
+                <a class="app-header__brand" href="../index.html">
+                    <img class="app-header__logo"
+                        src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                    Custodia
+                </a>
+            </div>
+            <a class="app-header__link" id="salir" href="login.html">Salir</a>
+        </header>
+        <main class="screen__content">
+            <div class="page-shell">
+                <div class="page-intro">
+                    <h1 class="page-title">Pagá con tranquilidad</h1>
+                    <p class="page-subtitle">Revisá el resumen antes de registrar el pago de prueba.</p>
+                </div>
+                <div id="form-alert" class="alert alert--error" role="alert"></div>
+                <p id="cargando" class="loading-note">Cargando los detalles...</p>
+                <div id="pago-contenido" class="hide">
+                    <div class="panel">
+                        <h2 class="panel__title">Resumen de la operación</h2>
+                        <div id="resumen"></div>
+                        <p id="monto" class="amount"></p>
+                    </div>
+                    <div class="info-note">
+                        <strong>Esta operación es una simulación.</strong>
+                    </div>
+                    <div class="actions-row">
+                        <button id="confirmar-pago" type="button" class="btn btn--primary">Confirmar pago</button>
+                        <a id="volver-detalle" class="btn btn--outline">Volver al detalle</a>
+                    </div>
+                </div>
+                <div id="pago-exitoso" class="panel hide" aria-live="polite">
+                    <h2 class="panel__title">¡Pago registrado!</h2>
+                    <p>Tu pago quedó registrado. Ahora el vendedor debe confirmar el despacho del producto.
+                    </p>
+                    <div id="datos-exito"></div>
+                    <div class="actions-row">
+                        <a id="ver-detalle" class="btn btn--primary">Ver solicitud</a>
+                        <a href="mis-solicitudes.html?tab=compras" class="btn btn--outline">Mis compras</a>
+                    </div>
+                </div>
+                <dialog id="modal-pago" class="confirmation-modal" aria-labelledby="modal-titulo"
+                    aria-describedby="modal-descripcion">
+                    <form method="dialog" id="modal-formulario">
+                        <h2 id="modal-titulo" class="panel__title">¿Confirmar el pago?</h2>
+                        <p id="modal-descripcion">Verificá que los datos sean correctos.</p>
+                        <div id="modal-resumen"></div>
+                        <p id="modal-monto" class="amount"></p>
+                        <div class="actions-row">
+                            <button id="modal-cancelar" type="submit" value="cancel"
+                                class="btn btn--outline">Cancelar</button>
+                            <button id="modal-confirmar" type="button" class="btn btn--primary">Confirmar pago</button>
+                        </div>
+                    </form>
+                </dialog>
+            </div>
+        </main>
+    </div>
+    <script src="../js/api.js"></script>
+    <script src="../js/solicitudes-ui.js"></script>
+    <script src="../js/pagar.js"></script>
+</body>
+
+</html>

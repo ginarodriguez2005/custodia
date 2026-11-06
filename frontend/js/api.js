@@ -1,9 +1,10 @@
-// Cliente mínimo para la API de Custodia.
-// Ruta relativa: el frontend lo sirve el mismo Express que expone la API.
+// Cliente compartido por las pantallas de Custodia. Se utiliza el mismo servidor Express.
 const API_URL = "/api";
 
 async function apiRequest(path, { method = "GET", body, auth = false } = {}) {
-    const headers = { "Content-Type": "application/json" };
+    const esFormulario = body instanceof FormData;
+    const headers = {};
+    if (body !== undefined && !esFormulario) headers["Content-Type"] = "application/json";
 
     if (auth) {
         const token = localStorage.getItem("token");
@@ -15,25 +16,19 @@ async function apiRequest(path, { method = "GET", body, auth = false } = {}) {
         response = await fetch(`${API_URL}${path}`, {
             method,
             headers,
-            body: body ? JSON.stringify(body) : undefined
+            body: body === undefined ? undefined : (esFormulario ? body : JSON.stringify(body))
         });
     } catch {
         throw new Error("No se pudo conectar con el servidor. Intentá de nuevo.");
     }
 
     const data = await response.json().catch(() => ({}));
-
-    // Sesión vencida o inválida en una ruta protegida: volver al login.
     if (auth && response.status === 401) {
         cerrarSesion();
-        window.location.href = "/pages/login.html";
+        window.location.replace("/pages/login.html");
         throw new Error(data.mensaje || "Tu sesión expiró.");
     }
-
-    if (!response.ok) {
-        throw new Error(data.mensaje || "Ocurrió un error inesperado.");
-    }
-
+    if (!response.ok) throw new Error(data.mensaje || "Ocurrió un error inesperado.");
     return data;
 }
 
@@ -48,14 +43,10 @@ function cerrarSesion() {
 }
 
 function obtenerUsuario() {
-    try {
-        return JSON.parse(localStorage.getItem("usuario"));
-    } catch {
-        return null;
-    }
+    try { return JSON.parse(localStorage.getItem("usuario")); }
+    catch { return null; }
 }
 
-// Para pantallas que necesitan sesión: si no hay token, ir al login.
 function requerirSesion() {
     if (!localStorage.getItem("token")) {
         window.location.replace("/pages/login.html");
