@@ -391,6 +391,28 @@
     background: rgba(0, 0, 0, 0.55);
 }
 
+/* Separación del bloque del campo de texto */
+.modal-field {
+    margin: var(--space-4) 0;
+}
+
+/* Separación superior del input */
+.modal-input {
+    margin-top: var(--space-1);
+}
+
+/* Texto secundario (recepción) */
+.modal-text-muted {
+    color: var(--color-text-muted);
+    margin: var(--space-3) 0;
+}
+
+/* Texto de advertencia (cancelar) */
+.modal-text-error {
+    color: var(--color-error);
+    margin: var(--space-3) 0;
+}
+
 @media (max-width: 520px) {
     .app-header__left {
         gap: var(--space-2);

@@ -42,6 +42,12 @@
                     <p class="info-note">Custodia es un prototipo académico. El pago es simulado.</p>
                     <div id="acciones" class="actions-row">
                         <a id="ir-pagar" class="btn btn--primary hide">Simular pago</a>
+                        <button type="button" id="btn-despachar" class="btn btn--primary hide">Confirmar
+                            despacho</button>
+                        <button type="button" id="btn-recepcion" class="btn btn--primary hide">Confirmar
+                            recepción</button>
+                        <button type="button" id="btn-cancelar" class="btn btn--danger hide">Cancelar solicitud</button>
+                        <a id="ir-reclamo" class="btn btn--outline hide" href="#">Iniciar reclamo</a>
                         <button type="button" id="copiar" class="btn btn--outline">Copiar enlace</button>
                         <a href="mis-solicitudes.html" class="btn btn--outline">Mis solicitudes</a>
                     </div>
@@ -49,6 +55,63 @@
                         tu propia venta.</p>
                     <p id="aviso-estado" class="text-small hide"></p>
                 </section>
+
+                <!-- Modal para Confirmar Despacho -->
+                <dialog id="modal-despacho" class="confirmation-modal" aria-labelledby="modal-despacho-titulo">
+                    <form method="dialog" id="form-despacho">
+                        <h2 id="modal-despacho-titulo" class="panel__title">Confirmar despacho</h2>
+                        <p>Indicá los datos del envío antes de confirmar que el producto fue despachado.</p>
+
+                        <div class="field modal-field">
+                            <label for="input-tracking" class="field__label">Número o código de seguimiento
+                                (opcional):</label>
+                            <input type="text" id="input-tracking" class="input modal-input"
+                                placeholder="Ej: UY-8392104">
+                        </div>
+
+                        <div class="actions-row">
+                            <button type="submit" value="cancel" class="btn btn--outline">Volver</button>
+                            <button type="button" id="confirmar-despacho" class="btn btn--primary">Confirmar
+                                despacho</button>
+                        </div>
+                    </form>
+                </dialog>
+
+                <!-- Modal para Confirmar Recepción -->
+                <dialog id="modal-recepcion" class="confirmation-modal" aria-labelledby="modal-recepcion-titulo">
+                    <form method="dialog" id="form-recepcion">
+                        <h2 id="modal-recepcion-titulo" class="panel__title">Confirmar recepción</h2>
+                        <p>¿Confirmás que recibiste el producto en condiciones?</p>
+
+                        <p class="text-small modal-text-muted">
+                            Al confirmar la recepción, los fondos retenidos en custodia se liberan al vendedor y la
+                            operación queda finalizada.
+                        </p>
+
+                        <div class="actions-row">
+                            <button type="submit" value="cancel" class="btn btn--outline">Volver</button>
+                            <button type="button" id="confirmar-recepcion" class="btn btn--primary">Confirmar
+                                recepción</button>
+                        </div>
+                    </form>
+                </dialog>
+
+                <!-- Modal para Cancelar Solicitud -->
+                <dialog id="modal-cancelar" class="confirmation-modal" aria-labelledby="modal-cancelar-titulo">
+                    <form method="dialog" id="form-cancelar">
+                        <h2 id="modal-cancelar-titulo" class="panel__title">Cancelar solicitud</h2>
+                        <p>¿Estás seguro de que querés cancelar esta solicitud?</p>
+
+                        <p class="text-small modal-text-error">
+                            Esta acción cancelará la solicitud y ya no se admitirán pagos para la misma.
+                        </p>
+
+                        <div class="actions-row">
+                            <button type="submit" value="cancel" class="btn btn--outline">Volver</button>
+                            <button type="button" id="confirmar-cancelar" class="btn btn--danger">Sí, cancelar</button>
+                        </div>
+                    </form>
+                </dialog>
             </div>
         </main>
     </div>

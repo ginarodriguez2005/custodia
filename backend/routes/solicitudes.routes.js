@@ -5,7 +5,10 @@ const {
     crearSolicitud,
     obtenerMisSolicitudes,
     obtenerSolicitudPorId,
-    pagarSolicitud
+    pagarSolicitud,
+    despacharSolicitud,
+    confirmarRecepcionSolicitud,
+    cancelarSolicitud
 } = require("../controllers/solicitudes.controller");
 
 const { verificarToken } = require("../middleware/auth.middleware");
@@ -26,5 +29,8 @@ router.post("/", verificarToken, (req, res, next) => {
 router.get("/mias", verificarToken, obtenerMisSolicitudes);
 router.get("/:id", obtenerSolicitudPorId);
 router.post("/:id/pagar", verificarToken, pagarSolicitud);
+router.post("/:id/despachar", verificarToken, despacharSolicitud);
+router.post("/:id/confirmar-recepcion", verificarToken, confirmarRecepcionSolicitud);
+router.post("/:id/cancelar", verificarToken, cancelarSolicitud);
 
 module.exports = router;
