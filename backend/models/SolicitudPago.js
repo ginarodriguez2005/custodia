@@ -74,6 +74,11 @@ const solicitudPagoSchema = new mongoose.Schema({
     fechaLiberacion: {
         type: Date,
         default: null
+    },
+
+    numeroSeguimiento: {
+        type: String,
+        default: null
     }
 
 });

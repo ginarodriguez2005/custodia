@@ -89,3 +89,13 @@
     box-shadow: var(--focus-ring);
     border-radius: var(--radius-sm);
 }
+
+/* Acción de peligro / cancelar */
+.btn--danger {
+    background: var(--color-error);
+    color: #FFFFFF;
+}
+
+.btn--danger:hover:not(:disabled) {
+    background: #A71D1D;
+}

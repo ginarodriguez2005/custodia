@@ -258,6 +258,111 @@ Solamente devuelve información pública del producto y del vendedor.
 
 **Errores:** 400 por identificador inválido, 401 por falta de autenticación, 403 si el vendedor intenta pagar su propia solicitud, 404 si no existe y 409 si no está disponible para pagar.
 
+### 5. Confirmar despacho
+
+**Método:** POST
+
+**Ruta:** `/api/solicitudes/:id/despachar`
+
+**Autenticación:** requerida.
+
+**Parámetro:** `id`, identificador de la solicitud.
+
+**Campos opcionales en el body:**
+
+| Campo | Tipo | Obligatorio | Descripción |
+|---|---|---|---|
+| numeroSeguimiento | Text | No | Código o remito de seguimiento del paquete |
+
+**Reglas de negocio:**
+
+- La solicitud debe existir y estar en estado `PAGADA`.
+- Solo el usuario que actúa como vendedor puede despachar el producto.
+- El estado pasa de `PAGADA` a `DESPACHADA` y se registra `fechaDespacho`.
+
+**Respuesta exitosa — 200:**
+
+```json
+{
+  "mensaje": "Solicitud despachada correctamente",
+  "solicitud": {
+    "id": "ID_SOLICITUD",
+    "estado": "DESPACHADA",
+    "fechaDespacho": "FECHA_DESPACHO",
+    "numeroSeguimiento": "CODIGO_OPCIONAL"
+  }
+}
+```
+
+**Errores:** 400 por identificador inválido, 401 por falta de autenticación, 403 si no es el vendedor, 404 si no existe y 409 si el estado no es `PAGADA`.
+
+### 6. Confirmar recepción
+
+**Método:** POST
+
+**Ruta:** `/api/solicitudes/:id/confirmar-recepcion`
+
+**Autenticación:** requerida.
+
+**Parámetro:** `id`, identificador de la solicitud.
+
+**Body:** ninguno.
+
+**Reglas de negocio:**
+
+- La solicitud debe existir y encontrarse en estado `DESPACHADA`.
+- Solo el usuario comprador puede confirmar la recepción.
+- No se puede confirmar si la solicitud se encuentra en mediación o reclamo (`EN_RECLAMO`).
+- El estado pasa a `FINALIZADA`, se registra `fechaRecepcion` y se libera el dinero con `fechaLiberacion`.
+
+**Respuesta exitosa — 200:**
+
+```json
+{
+  "mensaje": "Recepción confirmada. Los fondos han sido liberados al vendedor.",
+  "solicitud": {
+    "id": "ID_SOLICITUD",
+    "estado": "FINALIZADA",
+    "fechaRecepcion": "FECHA_RECEPCION",
+    "fechaLiberacion": "FECHA_LIBERACION"
+  }
+}
+```
+
+**Errores:** 400 por identificador inválido, 401 por falta de autenticación, 403 si no es el comprador, 404 si no existe y 409 si el estado no es `DESPACHADA` o si está en reclamo.
+
+### 7. Cancelar solicitud
+
+**Método:** POST
+
+**Ruta:** `/api/solicitudes/:id/cancelar`
+
+**Autenticación:** requerida.
+
+**Parámetro:** `id`, identificador de la solicitud.
+
+**Body:** ninguno.
+
+**Reglas de negocio:**
+
+- Solo las partes autorizadas de la solicitud pueden cancelarla.
+- No se puede cancelar si ya fue despachada o finalizada, ni si está en mediación/reclamo.
+- El estado pasa a `CANCELADA`.
+
+**Respuesta exitosa — 200:**
+
+```json
+{
+  "mensaje": "Solicitud cancelada correctamente",
+  "solicitud": {
+    "id": "ID_SOLICITUD",
+    "estado": "CANCELADA"
+  }
+}
+```
+
+**Errores:** 400 por identificador inválido, 401 por falta de autenticación, 403 si no pertenece a la operación, 404 si no existe y 409 si la solicitud no está disponible para cancelar.
+
 ## Formato general de errores
 
 ```json
