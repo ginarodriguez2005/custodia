@@ -1,6 +1,14 @@
 
 const jwt = require("jsonwebtoken");
 
+function generarToken(usuario) {
+    return jwt.sign(
+        { id: usuario._id.toString() },
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN || "1d" }
+    );
+}
+
 function verificarToken(req, res, next) {
     const authHeader = req.headers.authorization;
 
@@ -25,4 +33,4 @@ function verificarToken(req, res, next) {
     }
 }
 
-module.exports = { verificarToken };
+module.exports = { generarToken, verificarToken };

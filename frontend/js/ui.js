@@ -38,6 +38,22 @@ function validarRequeridos(form) {
     return valido;
 }
 
+// Restringe lo que se puede escribir: <input data-solo="letras|numeros">.
+// "letras" admite letras (con tildes y ñ) y espacios; "numeros" solo dígitos.
+const CARACTERES_NO_PERMITIDOS = {
+    letras: /[^\p{L} ]/gu,
+    numeros: /\D/g
+};
+
+document.querySelectorAll("[data-solo]").forEach((input) => {
+    const patron = CARACTERES_NO_PERMITIDOS[input.dataset.solo];
+    if (!patron) return;
+    input.addEventListener("input", () => {
+        const limpio = input.value.replace(patron, "");
+        if (limpio !== input.value) input.value = limpio;
+    });
+});
+
 // Quita el estado de error cuando el usuario corrige el campo.
 document.querySelectorAll(".field .input").forEach((input) => {
     input.addEventListener("input", () => {

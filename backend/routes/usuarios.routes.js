@@ -1,16 +1,13 @@
-
 const express = require("express");
 const {
-    registro,
-    login,
+    crearUsuario,
     obtenerUsuarioAutenticado
-} = require("../controllers/auth.controller");
+} = require("../controllers/usuarios.controller");
 const { verificarToken } = require("../middleware/auth.middleware");
 
 const router = express.Router();
 
-router.post("/registro", registro);
-router.post("/login", login);
+router.post("/", crearUsuario);
 router.get("/me", verificarToken, obtenerUsuarioAutenticado);
 
 module.exports = router;

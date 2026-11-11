@@ -10,7 +10,7 @@ loginForm.addEventListener("submit", async (event) => {
     setCargando(boton, true, "Ingresando...");
 
     try {
-        const data = await apiRequest("/auth/login", {
+        const data = await apiRequest("/sesiones", {
             method: "POST",
             body: {
                 celular: loginForm.celular.value.trim(),
@@ -27,5 +27,11 @@ loginForm.addEventListener("submit", async (event) => {
 });
 
 document.getElementById("olvide-btn").addEventListener("click", () => {
-    mostrarAlerta("La recuperación de contraseña todavía no está disponible.");
+    window.location.href = "recuperar.html";
 });
+
+// Aviso al volver de recuperar la contraseña
+if (new URLSearchParams(window.location.search).get("recuperada") === "1") {
+    mostrarAlerta("Tu contraseña se actualizó correctamente. Ya podés ingresar.", "success");
+    history.replaceState(null, "", window.location.pathname);
+}

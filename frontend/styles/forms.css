@@ -188,6 +188,62 @@ textarea.input {
     transform: translateY(-50%);
 }
 
+/* Cartel de requisitos de contraseña: rojo si no cumple, verde si cumple.
+   <div class="password-check is-error|is-ok"><p class="password-check__status"></p><ul class="password-check__rules"></ul></div> */
+.password-check {
+    margin-top: var(--space-2);
+    padding: var(--space-3);
+    border: 1px solid var(--color-error);
+    border-radius: var(--radius-sm);
+    background: var(--color-error-bg);
+    font-size: var(--font-size-sm);
+    color: var(--color-error);
+}
+
+.password-check.is-ok {
+    border-color: var(--color-success);
+    background: var(--color-success-bg);
+    color: var(--color-success-dark);
+}
+
+.password-check__status {
+    margin: 0;
+    font-weight: 700;
+}
+
+.password-check__rules {
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.password-check.is-ok .password-check__rules {
+    display: none;
+}
+
+.password-check__rule {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 2px 0;
+    color: var(--color-error);
+}
+
+.password-check__rule::before {
+    content: "✕";
+    width: 1em;
+    font-weight: 700;
+    text-align: center;
+}
+
+.password-check__rule.is-ok {
+    color: var(--color-success-dark);
+}
+
+.password-check__rule.is-ok::before {
+    content: "✓";
+}
+
 /* Selector de foto de perfil: avatar circular + botón */
 .photo-picker {
     display: flex;

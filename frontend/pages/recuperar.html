@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar contraseña | Custodia</title>
+    <link rel="stylesheet" href="../styles/main.css">
+</head>
+<body>
+    <div class="screen">
+        <header class="app-header">
+            <a class="app-header__brand" href="login.html">
+                <img class="app-header__logo" src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                Custodia
+            </a>
+            <a class="app-header__link" href="login.html">Volver</a>
+        </header>
+
+        <main class="screen__content">
+            <h1 class="page-title">Recuperá tu contraseña</h1>
+            <p class="page-subtitle" id="subtitulo">Te enviamos un código a tu celular para crear una nueva.</p>
+
+            <div class="alert alert--error" id="form-alert" role="alert"></div>
+
+            <!-- Paso 1: celular -->
+            <form class="form" id="celular-form" novalidate>
+                <div class="form__grid">
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="celular">Número de celular</label>
+                    </div>
+                    <input class="input" type="tel" id="celular" name="celular"
+                           placeholder="099123456" autocomplete="tel" inputmode="numeric" required>
+                    <p class="field__error">Ingresá tu número de celular.</p>
+                    <p class="field__hint">El mismo con el que creaste tu cuenta.</p>
+                </div>
+                </div>
+
+                <div class="screen__actions">
+                    <button class="btn btn--primary btn--block" type="submit">Enviarme un código</button>
+                    <a class="btn btn--outline btn--block" href="login.html">Volver a ingresar</a>
+                </div>
+            </form>
+
+            <!-- Paso 2: código y nueva contraseña -->
+            <form class="form" id="codigo-form" novalidate hidden>
+                <div class="form__grid">
+                <div class="field field--full">
+                    <div class="field__header">
+                        <label class="field__label" for="codigo">Código de 6 números</label>
+                    </div>
+                    <input class="input" type="text" id="codigo" name="codigo"
+                           placeholder="123456" autocomplete="one-time-code" inputmode="numeric"
+                           maxlength="6" data-solo="numeros" required>
+                    <p class="field__error">Ingresá el código de 6 números que te enviamos.</p>
+                    <p class="field__hint">
+                        Vence en 10 minutos.
+                        <button class="btn-text" type="button" id="reenviar-btn" disabled>Reenviar código</button>
+                    </p>
+                </div>
+
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="contrasena">Nueva contraseña</label>
+                    </div>
+                    <div class="input-group">
+                        <input class="input" type="password" id="contrasena" name="contrasena"
+                               placeholder="Ej: Custodia2026" autocomplete="new-password"
+                               maxlength="20" aria-describedby="password-check" required>
+                        <button class="btn-text input-group__action" type="button"
+                                data-toggle-password="contrasena">Mostrar</button>
+                    </div>
+                    <p class="field__error">Elegí una contraseña que cumpla todos los requisitos.</p>
+                    <div class="password-check is-error" id="password-check" aria-live="polite">
+                        <p class="password-check__status"></p>
+                        <ul class="password-check__rules"></ul>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="field__header">
+                        <label class="field__label" for="confirmacion">Repetí la nueva contraseña</label>
+                    </div>
+                    <div class="input-group">
+                        <input class="input" type="password" id="confirmacion" name="confirmacion"
+                               placeholder="Ej: Custodia2026" autocomplete="new-password"
+                               maxlength="20" required>
+                        <button class="btn-text input-group__action" type="button"
+                                data-toggle-password="confirmacion">Mostrar</button>
+                    </div>
+                    <p class="field__error">Las contraseñas no coinciden.</p>
+                </div>
+                </div>
+
+                <div class="screen__actions">
+                    <button class="btn btn--primary btn--block" type="submit">Guardar nueva contraseña</button>
+                    <button class="btn btn--outline btn--block" type="button" id="cambiar-celular-btn">Usar otro número</button>
+                    <p class="notice">
+                        <img class="notice__icon" src="../Public/Iconos/verified_user_30dp_0F3D5E_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                        Nunca compartas este código con nadie
+                    </p>
+                </div>
+            </form>
+        </main>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/contrasena.js"></script>
+    <script src="../js/recuperar.js"></script>
+</body>
+</html>

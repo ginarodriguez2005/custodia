@@ -4,6 +4,12 @@ const photoPicker = document.getElementById("photo-picker");
 const photoPreview = document.getElementById("photo-preview");
 const photoBtn = document.getElementById("photo-btn");
 
+const contrasenaInput = document.getElementById("contrasena");
+const contrasenaValida = iniciarCartelContrasena(
+    contrasenaInput,
+    document.getElementById("password-check")
+);
+
 let fotoPerfil = null;
 
 // Reduce la imagen a un cuadrado de 256px en JPEG para no superar
@@ -50,11 +56,19 @@ registroForm.addEventListener("submit", async (event) => {
 
     if (!validarRequeridos(registroForm)) return;
 
+    // Sin una contraseña segura no se puede continuar.
+    if (!contrasenaValida()) {
+        contrasenaInput.closest(".field").classList.add("has-error");
+        contrasenaInput.focus();
+        mostrarAlerta("La contraseña no cumple con los requisitos de seguridad.");
+        return;
+    }
+
     const boton = registroForm.querySelector("[type=submit]");
     setCargando(boton, true, "Creando cuenta...");
 
     try {
-        const data = await apiRequest("/auth/registro", {
+        const data = await apiRequest("/usuarios", {
             method: "POST",
             body: {
                 nombre: registroForm.nombre.value.trim(),

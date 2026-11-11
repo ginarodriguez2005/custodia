@@ -1,5 +1,117 @@
 # API REST — Custodia
 
+## Módulo: Usuarios y sesiones
+
+### 1. Registrar usuario
+
+**Método:** POST
+
+**Ruta:** `/api/usuarios`
+
+**Autenticación:** no requerida.
+
+**Body (JSON):**
+
+| Campo | Tipo | Obligatorio | Descripción |
+|---|---|---|---|
+| nombre | String | Sí | Nombre y apellido. Solo letras y espacios |
+| celular | String | Sí | Único por usuario. Solo números |
+| localidad | String | Sí | Localidad o barrio. Solo letras y espacios |
+| contrasena | String | Sí | Contraseña segura (ver requisitos) |
+| fotoPerfil | String | No | Imagen en base64 (data URL) |
+
+**Requisitos de la contraseña:** entre 8 y 20 caracteres, al menos una mayúscula, una minúscula y un número.
+
+**Respuesta exitosa — 201** (encabezado `Location: /api/usuarios/me`):
+
+```json
+{
+  "token": "JWT",
+  "usuario": {
+    "id": "ID_USUARIO",
+    "nombre": "Susana Pérez",
+    "celular": "099123456",
+    "fotoPerfil": null,
+    "localidad": "Pocitos"
+  }
+}
+```
+
+**Errores:** 400 por datos faltantes o contraseña insegura (incluye el arreglo `errores`), 409 si el celular ya está registrado y 500 por error interno.
+
+### 2. Iniciar sesión
+
+**Método:** POST
+
+**Ruta:** `/api/sesiones`
+
+**Autenticación:** no requerida.
+
+**Body (JSON):** `celular` y `contrasena`.
+
+**Respuesta exitosa — 201:** mismo formato que el registro (`token` y `usuario`).
+
+**Errores:** 400 por datos faltantes, 401 por credenciales inválidas y 500 por error interno.
+
+### 3. Consultar el usuario autenticado
+
+**Método:** GET
+
+**Ruta:** `/api/usuarios/me`
+
+**Autenticación:** requerida.
+
+**Respuesta exitosa — 200:** `{ "usuario": { ... } }`
+
+**Errores:** 401 por falta de autenticación, 404 si el usuario ya no existe y 500 por error interno.
+
+### 4. Solicitar recuperación de contraseña
+
+**Método:** POST
+
+**Ruta:** `/api/recuperaciones`
+
+**Autenticación:** no requerida.
+
+**Body (JSON):** `celular`.
+
+Genera un código de 6 números de un solo uso y lo envía al celular. **En el prototipo el envío está simulado: el código se imprime en la consola del servidor.** La respuesta es la misma exista o no el celular, para no revelar qué números están registrados. Si se pide otro código antes de 60 segundos, se mantiene el anterior; si se pide después, el anterior queda anulado.
+
+**Respuesta exitosa — 202** (encabezado `Location: /api/recuperaciones/ID`):
+
+```json
+{
+  "mensaje": "Si el celular está registrado, te enviamos un código de 6 números por WhatsApp.",
+  "recuperacion": {
+    "id": "ID_RECUPERACION",
+    "vigenciaMinutos": 10,
+    "esperaReenvioSegundos": 60
+  }
+}
+```
+
+**Errores:** 400 si falta el celular y 500 por error interno.
+
+### 5. Restablecer la contraseña
+
+**Método:** PATCH
+
+**Ruta:** `/api/recuperaciones/:id`
+
+**Autenticación:** no requerida (el código cumple esa función).
+
+**Body (JSON):** `codigo` (6 números) y `contrasena` (nueva, con los mismos requisitos que en el registro).
+
+**Reglas de negocio:**
+
+- El código vence a los 10 minutos y sirve una sola vez.
+- Se permiten 5 intentos; después hay que pedir un código nuevo.
+- La nueva contraseña debe ser distinta de la anterior.
+
+**Respuesta exitosa — 200:** `{ "mensaje": "Tu contraseña se actualizó correctamente. Ya podés ingresar." }`
+
+**Errores:** 400 por código incorrecto, vencido o agotado, contraseña insegura o igual a la anterior, y 500 por error interno.
+
 ## Módulo: Solicitudes de pago
 
 **URL base:** `http://localhost:3000/api/solicitudes`

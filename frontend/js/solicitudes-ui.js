@@ -106,9 +106,50 @@ function enlaceDetalle(id) {
     return `/pages/solicitud.html?id=${encodeURIComponent(id)}`;
 }
 
+// Iniciales para el avatar cuando el usuario no tiene foto: "Susana Pérez" → "SP"
+function inicialesDe(nombre) {
+    return (nombre || "")
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((parte) => parte.charAt(0).toUpperCase())
+        .join("") || "?";
+}
+
+// Foto de perfil (o iniciales) al lado de "Salir"
+function agregarAvatar(salir) {
+    const usuario = obtenerUsuario();
+    if (!usuario || !localStorage.getItem("token")) return;
+
+    const avatar = document.createElement("span");
+    avatar.className = "app-header__avatar";
+    avatar.title = usuario.nombre || "Mi perfil";
+
+    if (usuario.fotoPerfil) {
+        const imagen = document.createElement("img");
+        imagen.src = usuario.fotoPerfil;
+        imagen.alt = `Foto de perfil de ${usuario.nombre || "usuario"}`;
+        // Si la imagen no carga, se muestran las iniciales
+        imagen.addEventListener("error", () => {
+            imagen.remove();
+            avatar.textContent = inicialesDe(usuario.nombre);
+        });
+        avatar.append(imagen);
+    } else {
+        avatar.textContent = inicialesDe(usuario.nombre);
+        avatar.setAttribute("aria-label", usuario.nombre || "Usuario");
+    }
+
+    const contenedor = document.createElement("div");
+    contenedor.className = "app-header__user";
+    salir.replaceWith(contenedor);
+    contenedor.append(avatar, salir);
+}
+
 function configurarCabecera() {
     const salir = document.getElementById("salir");
     if (salir) {
+        agregarAvatar(salir);
         salir.addEventListener("click", (evento) => {
             evento.preventDefault();
             cerrarSesion();

@@ -30,8 +30,10 @@
                         <span class="field__tag">Obligatorio</span>
                     </div>
                     <input class="input" type="text" id="nombre" name="nombre"
-                           placeholder="Ej: Susana Pérez" autocomplete="name" required>
+                           placeholder="Ej: Susana Pérez" autocomplete="name"
+                           data-solo="letras" required>
                     <p class="field__error">Ingresá tu nombre y apellido.</p>
+                    <p class="field__hint">Solo letras y espacios.</p>
                 </div>
 
                 <div class="field">
@@ -40,8 +42,10 @@
                         <span class="field__tag">Obligatorio</span>
                     </div>
                     <input class="input" type="tel" id="celular" name="celular"
-                           placeholder="Ej: 099 123 456" autocomplete="tel" inputmode="tel" required>
+                           placeholder="Ej: 099123456" autocomplete="tel" inputmode="numeric"
+                           data-solo="numeros" required>
                     <p class="field__error">Ingresá tu número de celular.</p>
+                    <p class="field__hint">Solo números, sin espacios ni guiones.</p>
                 </div>
 
                 <div class="field">
@@ -50,8 +54,10 @@
                         <span class="field__tag">Obligatorio</span>
                     </div>
                     <input class="input" type="text" id="localidad" name="localidad"
-                           placeholder="Ej: Pocitos, Montevideo" autocomplete="address-level2" required>
+                           placeholder="Ej: Pocitos Montevideo" autocomplete="address-level2"
+                           data-solo="letras" required>
                     <p class="field__error">Ingresá tu localidad o barrio.</p>
+                    <p class="field__hint">Solo letras y espacios.</p>
                 </div>
 
                 <div class="field">
@@ -61,11 +67,16 @@
                     </div>
                     <div class="input-group">
                         <input class="input" type="password" id="contrasena" name="contrasena"
-                               placeholder="Elegí una sencilla" autocomplete="new-password" required>
+                               placeholder="Ej: Custodia2026" autocomplete="new-password"
+                               maxlength="20" aria-describedby="password-check" required>
                         <button class="btn-text input-group__action" type="button"
                                 data-toggle-password="contrasena">Mostrar</button>
                     </div>
-                    <p class="field__error">Elegí una contraseña.</p>
+                    <p class="field__error">Elegí una contraseña que cumpla todos los requisitos.</p>
+                    <div class="password-check is-error" id="password-check" aria-live="polite">
+                        <p class="password-check__status"></p>
+                        <ul class="password-check__rules"></ul>
+                    </div>
                 </div>
 
                 <div class="field field--full">
@@ -97,6 +108,7 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/ui.js"></script>
+    <script src="../js/contrasena.js"></script>
     <script src="../js/registro.js"></script>
 </body>
 </html>
