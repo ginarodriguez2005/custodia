@@ -363,6 +363,66 @@ Solamente devuelve información pública del producto y del vendedor.
 
 **Errores:** 400 por identificador inválido, 401 por falta de autenticación, 403 si no pertenece a la operación, 404 si no existe y 409 si la solicitud no está disponible para cancelar.
 
+## Módulo: Reclamos
+
+Cada solicitud admite **un único reclamo**, iniciado por el comprador o por el vendedor. `GET /api/solicitudes/mias` incluye en cada solicitud el campo `reclamo` (o `null`).
+
+### 1. Registrar reclamo
+
+**Método:** POST · **Ruta:** `/api/solicitudes/:id/reclamos` · **Autenticación:** requerida.
+
+**Body (JSON):** `motivo` y `descripcion` (máximo 500 caracteres).
+
+| Rol | Motivos permitidos |
+|---|---|
+| Comprador | `NO_RECIBIDO`, `NO_COINCIDE`, `DANADO`, `OTRO` |
+| Vendedor | `NO_CONFIRMA_RECEPCION`, `PROBLEMA_ENVIO`, `SIN_RESPUESTA`, `OTRO` |
+
+**Reglas de negocio:** el rol se deduce de la solicitud; debe estar `PAGADA` o `DESPACHADA`; pasa a `EN_RECLAMO`.
+
+**Respuesta exitosa — 201:** `{ "mensaje": "...", "reclamo": { ... } }`
+
+**Errores:** 400 por datos o motivo inválidos, 401 sin autenticación, 403 si no participa de la operación, 404 si no existe y 409 si ya tiene reclamo o el estado no lo permite.
+
+### 2. Consultar reclamos de una solicitud
+
+**Método:** GET · **Ruta:** `/api/solicitudes/:id/reclamos` · **Autenticación:** requerida (comprador o vendedor).
+
+**Respuesta exitosa — 200:** `{ "reclamos": [ ... ] }`
+
+### 3. Resolver reclamo
+
+**Método:** PATCH · **Ruta:** `/api/solicitudes/:id/reclamos` · **Autenticación:** requerida.
+
+No hay administrador: lo resuelven las partes, y cada una solo puede cerrarlo **a favor de la otra**.
+
+| Rol | `resolucion` permitida | Resultado |
+|---|---|---|
+| Comprador | `LIBERAR_VENDEDOR` | Solicitud `FINALIZADA`, registra `fechaLiberacion` |
+| Vendedor | `DEVOLVER_COMPRADOR` | Solicitud `CANCELADA`, registra `fechaDevolucion` |
+
+El reclamo pasa a `RESUELTO` y guarda `resolucion`, `resueltoPor` y `fechaResolucion`. Los reclamos no se eliminan: quedan como historial.
+
+**Respuesta exitosa — 200:** `{ "mensaje": "...", "reclamo": { ... }, "solicitud": { "id": "...", "estado": "FINALIZADA" } }`
+
+**Errores:** 400 si la resolución no corresponde al rol, 401 sin autenticación, 403 si no participa de la operación, 404 si no hay reclamo y 409 si ya fue resuelto o la solicitud no está en reclamo.
+
+## Módulo: Notificaciones
+
+Avisos dentro de la página web (campanita del encabezado), no por WhatsApp. Se generan para **la otra parte** de la operación cuando se crea un reclamo (`RECLAMO_CREADO`) y cuando se resuelve (`RECLAMO_RESUELTO`). El frontend las consulta cada 30 segundos.
+
+### 1. Consultar notificaciones
+
+**Método:** GET · **Ruta:** `/api/notificaciones` · **Autenticación:** requerida.
+
+**Respuesta exitosa — 200:** `{ "notificaciones": [ { "_id", "tipo", "mensaje", "solicitudPago", "rol", "leida", "fechaCreacion" } ], "noLeidas": 2 }` (últimas 20).
+
+### 2. Marcar todas como leídas
+
+**Método:** PATCH · **Ruta:** `/api/notificaciones/leidas` · **Autenticación:** requerida.
+
+**Respuesta exitosa — 200:** `{ "actualizadas": 2 }`
+
 ## Formato general de errores
 
 ```json

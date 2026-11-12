@@ -76,6 +76,12 @@ const solicitudPagoSchema = new mongoose.Schema({
         default: null
     },
 
+    // Devolución del dinero al comprador al resolver un reclamo
+    fechaDevolucion: {
+        type: Date,
+        default: null
+    },
+
     numeroSeguimiento: {
         type: String,
         default: null

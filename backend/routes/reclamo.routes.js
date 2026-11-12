@@ -2,7 +2,8 @@
 const express = require("express");
 const {
     registrarReclamo,
-    obtenerReclamos
+    obtenerReclamos,
+    resolverReclamo
 } = require("../controllers/reclamo.controller");
 const { verificarToken } = require("../middleware/auth.middleware");
 
@@ -11,5 +12,6 @@ const router = express.Router({ mergeParams: true });
 
 router.post("/", verificarToken, registrarReclamo);
 router.get("/", verificarToken, obtenerReclamos);
+router.patch("/", verificarToken, resolverReclamo);
 
 module.exports = router;

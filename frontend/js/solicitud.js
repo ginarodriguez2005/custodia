@@ -81,9 +81,9 @@
             botonRecepcion.classList.remove("hide");
         }
 
-        // Si la solicitud está pagada o despachada y es el comprador, puede reportar un reclamo
-        if ((solicitud.estado === "PAGADA" || solicitud.estado === "DESPACHADA") && esComprador) {
-            botonReclamo.href = `/pages/reporte.html?solicitud=${encodeURIComponent(id)}`;
+        // Si la solicitud está pagada o despachada, comprador o vendedor pueden reportar un reclamo
+        if (ESTADOS_RECLAMABLES.includes(solicitud.estado) && (esComprador || esVendedor)) {
+            botonReclamo.href = enlaceReclamo(id, esVendedor ? "ventas" : "compras");
             botonReclamo.classList.remove("hide");
         }
 

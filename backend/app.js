@@ -9,6 +9,7 @@ const sesionesRoutes = require("./routes/sesiones.routes");
 const recuperacionesRoutes = require("./routes/recuperaciones.routes");
 const solicitudesRoutes = require("./routes/solicitudes.routes");
 const reclamoRoutes = require("./routes/reclamo.routes");
+const notificacionesRoutes = require("./routes/notificaciones.routes");
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.use("/api/sesiones", sesionesRoutes);
 app.use("/api/recuperaciones", recuperacionesRoutes);
 app.use("/api/solicitudes", solicitudesRoutes);
 app.use("/api/solicitudes/:id/reclamos", reclamoRoutes);
+app.use("/api/notificaciones", notificacionesRoutes);
 
 app.use("/api", (req, res) => {
     res.status(404).json({ mensaje: "Ruta no encontrada" });

@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const crypto = require("node:crypto");
 const SolicitudPago = require("../models/SolicitudPago");
+const Reclamo = require("../models/Reclamo");
 const fs = require("node:fs/promises");
 
 // Crear una solicitud de pago
@@ -81,16 +82,31 @@ const obtenerMisSolicitudes = async (req, res) => {
         const [ventas, compras] = await Promise.all([
             SolicitudPago.find({ vendedor: usuarioId })
                 .sort({ fechaCreacion: -1 })
-                .select("-__v"),
+                .select("-__v")
+                .lean(),
 
             SolicitudPago.find({ comprador: usuarioId })
                 .sort({ fechaCreacion: -1 })
                 .select("-__v")
+                .lean()
         ]);
 
+        // Cada operación admite un único reclamo: se adjunta si existe
+        const ids = [...ventas, ...compras].map((s) => s._id);
+        const reclamos = await Reclamo.find({ solicitudPago: { $in: ids } })
+            .select("solicitudPago rol motivo descripcion estado fechaCreacion resolucion fechaResolucion")
+            .lean();
+        const reclamoPorSolicitud = new Map(
+            reclamos.map((r) => [String(r.solicitudPago), r])
+        );
+        const conReclamo = (s) => ({
+            ...s,
+            reclamo: reclamoPorSolicitud.get(String(s._id)) || null
+        });
+
         return res.status(200).json({
-            ventas,
-            compras
+            ventas: ventas.map(conReclamo),
+            compras: compras.map(conReclamo)
         });
 
     } catch (error) {

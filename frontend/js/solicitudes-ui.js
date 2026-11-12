@@ -42,8 +42,8 @@ function descripcionEstado(estado, rol = "publico") {
             publico: "Esta operación simulada está finalizada."
         },
         EN_RECLAMO: {
-            vendedor: "Hay un reclamo abierto y la operación se encuentra detenida.",
-            comprador: "Tu compra tiene un reclamo abierto y la operación está detenida.",
+            vendedor: "Hay un reclamo abierto y la operación está detenida. Podés resolverlo desde \"Ver reclamo\".",
+            comprador: "Tu compra tiene un reclamo abierto y la operación está detenida. Podés resolverlo desde \"Ver reclamo\".",
             publico: "La operación está detenida por un reclamo."
         },
         CANCELADA: {
@@ -53,6 +53,62 @@ function descripcionEstado(estado, rol = "publico") {
         }
     };
     return mensajes[estado]?.[rol] || mensajes[estado]?.publico || "No hay información del estado.";
+}
+
+// Motivos de reclamo por rol. Los valores coinciden con MOTIVOS_POR_ROL del modelo Reclamo.
+const MOTIVOS_RECLAMO = {
+    COMPRADOR: [
+        { valor: "NO_RECIBIDO", texto: "No recibí el producto" },
+        { valor: "NO_COINCIDE", texto: "No es como me lo describieron" },
+        { valor: "DANADO", texto: "Llegó dañado o incompleto" },
+        { valor: "OTRO", texto: "Otro problema" }
+    ],
+    VENDEDOR: [
+        { valor: "NO_CONFIRMA_RECEPCION", texto: "El comprador no confirma la recepción" },
+        { valor: "PROBLEMA_ENVIO", texto: "Hubo un problema con el envío" },
+        { valor: "SIN_RESPUESTA", texto: "El comprador no responde" },
+        { valor: "OTRO", texto: "Otro problema" }
+    ]
+};
+
+const ESTADOS_RECLAMABLES = ["PAGADA", "DESPACHADA"];
+
+// Cómo puede cerrar el reclamo cada parte (siempre a favor de la otra).
+// Coincide con RESOLUCION_POR_ROL del modelo Reclamo.
+const RESOLUCION_RECLAMO = {
+    COMPRADOR: {
+        valor: "LIBERAR_VENDEDOR",
+        boton: "Se solucionó: liberar el dinero",
+        explicacion: "Si el problema se solucionó, liberá el dinero al vendedor. La operación queda finalizada."
+    },
+    VENDEDOR: {
+        valor: "DEVOLVER_COMPRADOR",
+        boton: "Devolver el dinero al comprador",
+        explicacion: "Si le das la razón al comprador, devolvele el dinero. La operación queda cancelada."
+    }
+};
+
+function textoResolucion(resolucion) {
+    return resolucion === "LIBERAR_VENDEDOR"
+        ? "Dinero liberado al vendedor"
+        : "Dinero devuelto al comprador";
+}
+
+function textoMotivo(rol, valor) {
+    return (MOTIVOS_RECLAMO[rol] || []).find((m) => m.valor === valor)?.texto || "Otro problema";
+}
+
+function etiquetaEstadoReclamo(estado) {
+    const etiquetas = {
+        ABIERTO: "Abierto",
+        EN_REVISION: "En revisión",
+        RESUELTO: "Resuelto"
+    };
+    return etiquetas[estado] || "Abierto";
+}
+
+function enlaceReclamo(id, tab) {
+    return `/pages/reporte.html?solicitud=${encodeURIComponent(id)}&tab=${tab}`;
 }
 
 function obtenerIdSolicitud() {
@@ -146,10 +202,127 @@ function agregarAvatar(salir) {
     contenedor.append(avatar, salir);
 }
 
+// Campanita de notificaciones dentro de la página (reclamos creados y resueltos)
+const INTERVALO_NOTIFICACIONES_MS = 30000;
+
+function iconoCampana() {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+    svg.setAttribute("viewBox", "0 0 24 24");
+    svg.setAttribute("aria-hidden", "true");
+    svg.classList.add("notif__icon");
+    const trazo = document.createElementNS(ns, "path");
+    trazo.setAttribute("d", "M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z");
+    svg.append(trazo);
+    return svg;
+}
+
+function agregarNotificaciones(contenedor) {
+    if (!contenedor || !localStorage.getItem("token")) return;
+
+    const raiz = nodo("div", "notif");
+    const boton = nodo("button", "notif__button");
+    boton.type = "button";
+    boton.setAttribute("aria-haspopup", "true");
+    boton.setAttribute("aria-expanded", "false");
+    boton.setAttribute("aria-label", "Notificaciones");
+    const contador = nodo("span", "notif__badge hide");
+    boton.append(iconoCampana(), contador);
+
+    const panel = nodo("div", "notif__panel hide");
+    panel.setAttribute("role", "region");
+    panel.setAttribute("aria-label", "Notificaciones");
+
+    raiz.append(boton, panel);
+    contenedor.prepend(raiz);
+
+    let datos = { notificaciones: [], noLeidas: 0 };
+
+    function pintarContador() {
+        const n = datos.noLeidas;
+        contador.textContent = n > 9 ? "9+" : String(n);
+        contador.classList.toggle("hide", n === 0);
+        boton.setAttribute("aria-label", n ? `Notificaciones (${n} sin leer)` : "Notificaciones");
+    }
+
+    function pintarLista() {
+        panel.replaceChildren(nodo("p", "notif__title", "Notificaciones"));
+        if (!datos.notificaciones.length) {
+            panel.append(nodo("p", "notif__empty", "No tenés notificaciones."));
+            return;
+        }
+        const lista = nodo("ul", "notif__list");
+        datos.notificaciones.forEach((n) => {
+            const item = nodo("li", n.leida ? "notif__item" : "notif__item notif__item--nueva");
+            const enlace = nodo("a", "notif__link");
+            enlace.href = n.solicitudPago
+                ? enlaceReclamo(n.solicitudPago, n.rol === "VENDEDOR" ? "ventas" : "compras")
+                : "#";
+            enlace.append(
+                nodo("span", "notif__text", n.mensaje),
+                nodo("span", "notif__date", new Date(n.fechaCreacion).toLocaleString("es-UY", {
+                    day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit"
+                }))
+            );
+            item.append(enlace);
+            lista.append(item);
+        });
+        panel.append(lista);
+    }
+
+    async function cargar() {
+        try {
+            datos = await apiRequest("/notificaciones", { auth: true });
+            pintarContador();
+            if (!panel.classList.contains("hide")) pintarLista();
+        } catch {
+            // Sin conexión: se reintenta en el próximo ciclo
+        }
+    }
+
+    function cerrar() {
+        panel.classList.add("hide");
+        boton.setAttribute("aria-expanded", "false");
+    }
+
+    boton.addEventListener("click", async () => {
+        const abrir = panel.classList.contains("hide");
+        if (!abrir) return cerrar();
+
+        pintarLista();
+        panel.classList.remove("hide");
+        boton.setAttribute("aria-expanded", "true");
+
+        // Al abrir el panel se marcan como leídas (se siguen viendo resaltadas hasta cerrarlo)
+        if (datos.noLeidas) {
+            try {
+                await apiRequest("/notificaciones/leidas", { method: "PATCH", auth: true });
+                datos.noLeidas = 0;
+                pintarContador();
+            } catch {
+                // Se volverá a intentar al abrir de nuevo
+            }
+        }
+    });
+
+    document.addEventListener("click", (evento) => {
+        if (!raiz.contains(evento.target)) cerrar();
+    });
+    document.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape") cerrar();
+    });
+
+    cargar();
+    setInterval(() => {
+        if (!document.hidden) cargar();
+    }, INTERVALO_NOTIFICACIONES_MS);
+}
+
 function configurarCabecera() {
     const salir = document.getElementById("salir");
     if (salir) {
         agregarAvatar(salir);
+        agregarNotificaciones(salir.closest(".app-header__user"));
         salir.addEventListener("click", (evento) => {
             evento.preventDefault();
             cerrarSesion();

@@ -62,9 +62,42 @@ if (requerirSesion()) {
                     `Creada: ${new Date(solicitud.fechaCreacion).toLocaleDateString("es-UY")}`
                 ));
             }
+            const id = solicitud._id || solicitud.id;
+            const reclamo = solicitud.reclamo;
+            if (reclamo) {
+                // Ya existe el único reclamo permitido: se muestra en lugar del botón
+                const propio = (reclamo.rol === "VENDEDOR") === (tipoActual === "ventas");
+                const resuelto = reclamo.estado === "RESUELTO";
+                const titulo = resuelto ? "Reclamo resuelto" : (propio ? "Ya hiciste un reclamo" : (
+                    reclamo.rol === "VENDEDOR" ? "El vendedor hizo un reclamo" : "El comprador hizo un reclamo"
+                ));
+                const aviso = nodo("div", resuelto ? "claim-note claim-note--resuelto" : "claim-note");
+                aviso.append(
+                    nodo("p", "claim-note__title", titulo),
+                    nodo("p", "claim-note__text", textoMotivo(reclamo.rol, reclamo.motivo)),
+                    nodo("p", "claim-note__meta", resuelto
+                        ? `${textoResolucion(reclamo.resolucion)} · ` +
+                          new Date(reclamo.fechaResolucion).toLocaleDateString("es-UY")
+                        : `Estado: ${etiquetaEstadoReclamo(reclamo.estado)} · ` +
+                          new Date(reclamo.fechaCreacion).toLocaleDateString("es-UY"))
+                );
+                cuerpo.append(aviso);
+            }
+
+            const acciones = nodo("div", "product-card__actions");
             const enlace = nodo("a", "btn btn--outline btn--block btn--sm", "Ver detalles");
-            enlace.href = enlaceDetalle(solicitud._id || solicitud.id);
-            cuerpo.append(enlace);
+            enlace.href = enlaceDetalle(id);
+            acciones.append(enlace);
+            if (reclamo) {
+                const verReclamo = nodo("a", "btn btn--outline btn--block btn--sm", "Ver reclamo");
+                verReclamo.href = enlaceReclamo(id, tipoActual);
+                acciones.append(verReclamo);
+            } else if (ESTADOS_RECLAMABLES.includes(solicitud.estado)) {
+                const reclamar = nodo("a", "btn btn--accent btn--block btn--sm", "Hacer un reclamo");
+                reclamar.href = enlaceReclamo(id, tipoActual);
+                acciones.append(reclamar);
+            }
+            cuerpo.append(acciones);
             tarjeta.append(cuerpo);
             contenedor.append(tarjeta);
         });

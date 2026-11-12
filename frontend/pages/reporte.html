@@ -9,21 +9,69 @@
 <body>
     <div class="screen">
         <header class="app-header">
-            <a class="app-header__brand" href="../index.html">
-                <img class="app-header__logo" src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
-                Custodia
-            </a>
-            <a class="app-header__link" href="#">Ayuda</a>
+            <div class="app-header__left">
+                <a class="app-header__back" id="volver" href="mis-solicitudes.html" aria-label="Volver a mis compras y ventas">← Volver</a>
+                <a class="app-header__brand" href="../index.html">
+                    <img class="app-header__logo" src="../Public/Iconos/verified_user_30dp_FFFFFF_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                    Custodia
+                </a>
+            </div>
+            <a class="app-header__link" id="salir" href="login.html">Salir</a>
         </header>
 
         <main class="screen__content">
             <h1 class="page-title">Contanos qué pasó</h1>
-            <p class="page-subtitle">Elegí la opción que mejor describe el problema.</p>
+            <p class="page-subtitle" id="reporte-subtitulo">Elegí la opción que mejor describe el problema.</p>
 
             <div class="alert alert--error" id="form-alert" role="alert"></div>
 
-            <form class="form" id="reporte-form" novalidate>
-                <!-- Las opciones se cargan desde reporte.js según el rol de la cuenta -->
+            <p class="loading-note" id="cargando">Cargando la operación...</p>
+
+            <!-- Producto de la operación reclamada -->
+            <div class="claim-product hide" id="producto">
+                <img class="claim-product__image hide" id="producto-foto" alt="">
+                <div>
+                    <p class="claim-product__name" id="producto-nombre"></p>
+                    <p class="claim-product__price" id="producto-precio"></p>
+                </div>
+            </div>
+
+            <!-- Se muestra cuando la operación ya tiene su único reclamo -->
+            <div class="panel hide" id="reclamo-existente">
+                <h2 class="panel__title" id="reclamo-titulo">Ya hiciste un reclamo</h2>
+                <div id="reclamo-datos"></div>
+
+                <!-- Lo resuelven las partes: cada una solo puede cerrarlo a favor de la otra -->
+                <div class="claim-resolve hide" id="resolver">
+                    <p class="claim-resolve__text" id="resolver-texto"></p>
+                    <button type="button" class="btn btn--primary btn--block" id="resolver-btn"></button>
+                </div>
+
+                <p class="notice" id="aviso-protegido">
+                    <img class="notice__icon" src="../Public/Iconos/verified_user_30dp_0F3D5E_FILL0_wght400_GRAD0_opsz24.svg" alt="">
+                    Hasta que se resuelva, el dinero sigue protegido
+                </p>
+            </div>
+
+            <dialog id="modal-resolver" class="confirmation-modal" aria-labelledby="modal-resolver-titulo">
+                <form method="dialog">
+                    <h2 id="modal-resolver-titulo" class="panel__title">Resolver reclamo</h2>
+                    <p id="modal-resolver-texto"></p>
+                    <p class="modal-text-error">Esta acción no se puede deshacer.</p>
+                    <div class="actions-row">
+                        <button type="submit" value="cancel" class="btn btn--outline">Volver</button>
+                        <button type="button" id="confirmar-resolver" class="btn btn--primary">Confirmar</button>
+                    </div>
+                </form>
+            </dialog>
+
+            <form class="form hide" id="reporte-form" novalidate>
+                <div class="segmented" role="group" aria-label="Tu rol en la operación">
+                    <button type="button" class="segmented__option" data-rol="COMPRADOR" aria-pressed="false">Soy comprador</button>
+                    <button type="button" class="segmented__option" data-rol="VENDEDOR" aria-pressed="false">Soy vendedor</button>
+                </div>
+
+                <!-- Las opciones se cargan desde reporte.js según el rol en la operación -->
                 <fieldset class="option-list" id="motivos">
                     <legend class="visually-hidden">Motivo del reporte</legend>
                 </fieldset>
@@ -55,6 +103,7 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/ui.js"></script>
+    <script src="../js/solicitudes-ui.js"></script>
     <script src="../js/reporte.js"></script>
 </body>
 </html>
